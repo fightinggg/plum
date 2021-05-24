@@ -71,8 +71,12 @@ public class HelpCommand extends RobotCommand {
 
 		}
 
+		MessageManager.sendMessageBySituation(fromGroup, fromQQ, "1");
+
 		// 处理完文本后，最后发送文本
 		MessageManager.sendMessageBySituation(fromGroup, fromQQ, result);
+
+
 
 	}
 

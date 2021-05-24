@@ -13,3 +13,12 @@ repositories {
     maven("https://maven.aliyun.com/repository/public")
     mavenCentral()
 }
+
+
+dependencies {
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    implementation("com.google.code.gson:gson:2.8.6")
+    // https://mvnrepository.com/artifact/org.jsoup/jsoup
+    implementation("org.jsoup:jsoup:1.13.1")
+
+}

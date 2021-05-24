@@ -21,7 +21,7 @@ public class LoggerManager {
     public static void logDebug(String content, boolean forceLog) {
 
         if (forceLog) {
-            LoggerManager.getLogger().debug(content);
+            LoggerManager.getLogger().info(content);
             return;
         }
 
@@ -29,7 +29,7 @@ public class LoggerManager {
         if (FileManager.applicationConfig_File == null ||
                 !FileManager.applicationConfig_File.isHasInit() ||
                 FileManager.applicationConfig_File.getSpecificDataInstance().Debug.enable) {
-            LoggerManager.getLogger().debug(content);
+            LoggerManager.getLogger().info(content);
         }
     }
 

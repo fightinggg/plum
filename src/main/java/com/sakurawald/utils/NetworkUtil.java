@@ -7,7 +7,6 @@ import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.meterware.httpunit.WebClient;
 import com.sakurawald.debug.LoggerManager;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;

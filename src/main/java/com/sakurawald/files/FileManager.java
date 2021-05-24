@@ -1,8 +1,6 @@
 package com.sakurawald.files;
 
 import com.sakurawald.debug.LoggerManager;
-
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -25,7 +23,13 @@ public class FileManager {
     }
 
     private FileManager() {
-        // Do nothing.
+        try {
+            this.init();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            LoggerManager.reportException(e);
+        }
     }
 
     /** Config Instances. **/

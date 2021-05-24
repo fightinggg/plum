@@ -97,11 +97,7 @@ public class DailyPoetryExplanationCommand extends RobotCommand {
 				LoggerManager.logDebug("[命令系统]", "@诗歌解读：恢复诗歌关键诗句："
 						+ keySentence);
 
-				try {
-					HTTP = NetworkUtil.getDynamicHTML(URL);
-				} catch (IOException e) {
-					LoggerManager.reportException(e);
-				}
+				HTTP = NetworkUtil.getDynamicHTML(URL);
 
 				DailyPoetry_Timer.getInstance().todayPoetryHTML = HTTP;
 				/** 若本程序在21点后，因重启而错过古代诗的prepareStage，则在诗歌解读里，重新获取HTTP **/

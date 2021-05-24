@@ -7,10 +7,6 @@ import com.sakurawald.debug.LoggerManager;
 import com.sakurawald.files.FileManager;
 import com.sakurawald.framework.BotManager;
 import com.sakurawald.framework.MessageManager;
-import sun.rmi.runtime.Log;
-
-import java.security.MessageDigest;
-
 //从本地重新加载配置文件到内存
 public class ReloadCommand extends RobotCommand {
 

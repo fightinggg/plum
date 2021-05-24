@@ -13,7 +13,7 @@ import com.sakurawald.timer.RobotAbstractTimer;
 import com.sakurawald.timer.TimerController;
 import com.sakurawald.utils.DateUtil;
 import com.sakurawald.utils.NetworkUtil;
-import sun.rmi.runtime.Log;
+
 
 public class DailySentenceTimer extends RobotAbstractTimer implements TimerController {
 

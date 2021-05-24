@@ -17,7 +17,7 @@ import net.mamoe.mirai.event.events.*;
 import java.io.IOException;
 
 public final class PluginMain extends JavaPlugin {
-    private static final PluginMain INSTANCE = new PluginMain();
+    public static final PluginMain INSTANCE = new PluginMain();
     private static RobotCommandManager commandManager = null;
     private static Bot CURRENT_BOT = null;
 
@@ -38,8 +38,8 @@ public final class PluginMain extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        LoggerManager.logDebug("Plum >> Enable.");
-        LoggerManager.logDebug("Start Init...");
+        LoggerManager.logDebug("Plum >> Enable.", true);
+        LoggerManager.logDebug("Start Init...", true);
 
         // 初始化指令管理系统（事件驱动系统）
         commandManager = new RobotCommandManager();
@@ -51,11 +51,6 @@ public final class PluginMain extends JavaPlugin {
         } catch (IllegalArgumentException e) {
             LoggerManager.reportException(e);
         }
-
-
-        LoggerManager.logDebug("[TimerSystem]", "Start TimerSystem.");
-        // 初始化时间任务系统
-        RobotTimerManager.getInstance();
 
         /** 群消息事件 **/
         GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessageEvent.class,
@@ -178,7 +173,12 @@ public final class PluginMain extends JavaPlugin {
 
                         });
 
-        LoggerManager.logDebug("End Init...");
+
+        LoggerManager.logDebug("[TimerSystem]", "Start TimerSystem.");
+        // 初始化时间任务系统
+        RobotTimerManager.getInstance();
+
+        LoggerManager.logDebug("End Init...", true);
     }
 
 
