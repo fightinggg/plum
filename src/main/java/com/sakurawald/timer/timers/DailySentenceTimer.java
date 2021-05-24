@@ -167,27 +167,8 @@ public class DailySentenceTimer extends RobotAbstractTimer implements TimerContr
 
 	@Override
 	public void run() {
-
 		logDebugTimerState();
-
-
-		// 新建一个线程去执行
-		new Thread() {
-			@Override
-			public void run() {
-
-				if (isPrepareStage()) {
-					prepareStage();
-				}
-
-				if (isSendStage()) {
-					sendStage();
-				}
-
-			}
-
-		}.start();
-
+		autoControlTimer();
 	}
 
 

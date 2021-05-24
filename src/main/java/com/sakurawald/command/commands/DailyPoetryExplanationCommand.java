@@ -24,6 +24,7 @@ public class DailyPoetryExplanationCommand extends RobotCommand {
 		getRange().add(RobotCommandChatType.FRIEND_CHAT);
 		getRange().add(RobotCommandChatType.GROUP_TEMP_CHAT);
 		getRange().add(RobotCommandChatType.GROUP_CHAT);
+		getRange().add(RobotCommandChatType.STRANGER_CHAT);
 
 		getUser().add(RobotCommandUser.NORMAL_USER);
 		getUser().add(RobotCommandUser.GROUP_ADMINISTRATOR);

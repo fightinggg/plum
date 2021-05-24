@@ -466,28 +466,8 @@ public class DailyPoetry_Timer extends RobotAbstractTimer implements TimerContro
 
 	@Override
 	public void run() {
-
 		logDebugTimerState();
-
-		// 新建一个线程去执行
-		new Thread() {
-			@Override
-			public void run() {
-
-				// 判断是否为准备阶段
-				if (isPrepareStage()) {
-					prepareStage();
-				}
-
-				// 判断是否为发送阶段
-				if (isSendStage()) {
-					sendStage();
-				}
-
-			}
-
-		}.start();
-
+		autoControlTimer();
 	}
 
 	@Override

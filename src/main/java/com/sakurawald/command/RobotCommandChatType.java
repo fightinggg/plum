@@ -11,7 +11,7 @@ package com.sakurawald.command;
  * 
  * */
 public enum RobotCommandChatType {
-	FRIEND_CHAT(11), GROUP_CHAT(1), GROUP_TEMP_CHAT(2), DISCUSS_MSG(1000);
+	FRIEND_CHAT(11), GROUP_CHAT(1), GROUP_TEMP_CHAT(2), DISCUSS_MSG(1000), STRANGER_CHAT(2000);
 
 	int type = 0;
 

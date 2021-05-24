@@ -17,6 +17,8 @@ import net.mamoe.mirai.event.events.*;
 import java.io.IOException;
 
 public final class PluginMain extends JavaPlugin {
+
+    // INSTANCE字段必须设置为public, 否则mirai-console在反射时会失败.
     public static final PluginMain INSTANCE = new PluginMain();
     private static RobotCommandManager commandManager = null;
     private static Bot CURRENT_BOT = null;
@@ -29,8 +31,12 @@ public final class PluginMain extends JavaPlugin {
         return CURRENT_BOT;
     }
 
+    public static RobotCommandManager getCommandManager() {
+        return commandManager;
+    }
+
     private PluginMain() {
-        super(new JvmPluginDescriptionBuilder("com.sakurawald.PlumRobot", "1.0-SNAPSHOT")
+        super(new JvmPluginDescriptionBuilder("com.sakurawald.Plum", "Baka")
                 .name("Plum")
                 .author("SakuraWald")
                 .build());
@@ -41,22 +47,23 @@ public final class PluginMain extends JavaPlugin {
         LoggerManager.logDebug("Plum >> Enable.", true);
         LoggerManager.logDebug("Start Init...", true);
 
-        // 初始化指令管理系统（事件驱动系统）
+        // Init CommandSystem.
+        LoggerManager.logDebug("CommandSystem", "Init CommandSystem.", true);
         commandManager = new RobotCommandManager();
 
-        // 初始化配置文件系统
+        // Init FileSystem.
         try {
-            LoggerManager.logDebug("[FileSystem]", "Init FileSystem.");
+            LoggerManager.logDebug("FileSystem", "Init FileSystem.", true);
             FileManager.getInstance();
         } catch (IllegalArgumentException e) {
             LoggerManager.reportException(e);
         }
 
-        /** 群消息事件 **/
+        /** 接收群消息事件 **/
+        LoggerManager.logDebug("EventSystem", "Start to subscribe events.");
         GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessageEvent.class,
                 event -> {
                     {
-
                         try {
                             commandManager.receiveMessage(
                                     RobotCommandChatType.GROUP_CHAT.getType(),
@@ -71,19 +78,17 @@ public final class PluginMain extends JavaPlugin {
                 });
 
 
-        /** 好友消息事件 **/
+        /** 接收好友消息事件 **/
         GlobalEventChannel.INSTANCE.subscribeAlways(
                 FriendMessageEvent.class,
                 event -> {
-
                     {
-
                         try {
                             commandManager.receiveMessage(
                                     RobotCommandChatType.FRIEND_CHAT.getType(),
                                     -1, event.getSender().getId(), event
                                             .getMessage().contentToString(),
-                                    -1, 0, null);
+                                    -1, -1, null);
                         } catch (Exception e) {
                             LoggerManager.reportException(e);
                         }
@@ -92,13 +97,33 @@ public final class PluginMain extends JavaPlugin {
 
                 });
 
-        /** 临时消息事件 **/
+        /** 接收陌生人消息事件 **/
         GlobalEventChannel.INSTANCE.subscribeAlways(
-                TempMessageEvent.class,
+                StrangerMessageEvent.class,
                 event -> {
 
                     {
 
+                        try {
+                            commandManager.receiveMessage(
+                                    RobotCommandChatType.STRANGER_CHAT.getType(),
+                                    -1, event.getSender().getId(), event
+                                            .getMessage().contentToString(),
+                                    -1, -1, null);
+                        } catch (Exception e) {
+                            LoggerManager.reportException(e);
+                        }
+
+                    }
+
+                });
+
+
+        /** 接收群临时消息事件 **/
+        GlobalEventChannel.INSTANCE.subscribeAlways(
+                GroupTempMessageEvent.class,
+                event -> {
+                    {
                         try {
                             commandManager.receiveMessage(
                                     RobotCommandChatType.GROUP_TEMP_CHAT
@@ -111,21 +136,17 @@ public final class PluginMain extends JavaPlugin {
                         }
 
                     }
-
                 });
 
-        /** 机器人上线事件 **/
+        /** 机器人登陆事件 **/
         GlobalEventChannel.INSTANCE.subscribeAlways(BotOnlineEvent.class, event -> {
-
             {
                 /** 初始化Bot实例 **/
                 tryInitBot(event.getBot());
-
             }
-
         });
 
-        /** 好友请求处理事件 **/
+        /** 接收好友添加请求事件 **/
         GlobalEventChannel.INSTANCE
                 .subscribeAlways(
                         NewFriendRequestEvent.class,
@@ -134,48 +155,45 @@ public final class PluginMain extends JavaPlugin {
                             {
                                 // 自动处理好友邀请
                                 if (FileManager.applicationConfig_File.getSpecificDataInstance().Admin.InvitationManager.QQFriendInvitation.autoAcceptAddQQFriend) {
-
-                                    // 同意好友添加请求
-                                    event.accept();
-
+                                    // 同意 -> 好友添加请求
                                     LoggerManager.logDebug(
-                                            "[ContactSystem]",
+                                            "ContactSystem",
                                             "Accept -> FriendAddRequest: "
                                                     + event.getFromId());
+                                    event.accept();
 
 
                                 } else {
-                                    event.reject(true);
+                                    // 拒绝 -> 好友添加请求
+                                    event.reject(false);
                                 }
 
                             }
 
                         });
 
-        /** 求请求处理事件 **/
+
+
+        /** 邀请入群请求事件 **/
         GlobalEventChannel.INSTANCE
                 .subscribeAlways(
                         BotInvitedJoinGroupRequestEvent.class,
                         event -> {
-
                             {
-
                                 if (FileManager.applicationConfig_File.getSpecificDataInstance().Admin.InvitationManager.QQGroupInvitation.autoAcceptAddQQGroup) {
                                     event.accept();
                                     LoggerManager.logDebug(
-                                            "[ContactSystem]",
-                                            "Accept -> GroupAddRequest: "
+                                            "ContactSystem",
+                                            "Accept -> InvitedJoinGroupRequest: "
                                                     + event.getGroupId());
-                                }  // Do nothing.
-
+                                }
 
                             }
-
                         });
 
 
-        LoggerManager.logDebug("[TimerSystem]", "Start TimerSystem.");
         // 初始化时间任务系统
+        LoggerManager.logDebug("TimerSystem", "Start TimerSystem.", true);
         RobotTimerManager.getInstance();
 
         LoggerManager.logDebug("End Init...", true);
@@ -183,11 +201,9 @@ public final class PluginMain extends JavaPlugin {
 
 
     public void tryInitBot(Bot bot) {
-
         if (CURRENT_BOT == null) {
             CURRENT_BOT = bot;
         }
-
     }
 
 

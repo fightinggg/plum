@@ -15,6 +15,8 @@ public class ReloadCommand extends RobotCommand {
 		getRange().add(RobotCommandChatType.FRIEND_CHAT);
 		getRange().add(RobotCommandChatType.GROUP_TEMP_CHAT);
 		getRange().add(RobotCommandChatType.GROUP_CHAT);
+		getRange().add(RobotCommandChatType.STRANGER_CHAT);
+
 		getUser().add(RobotCommandUser.BOT_ADMINISTRATOR);
 	}
 

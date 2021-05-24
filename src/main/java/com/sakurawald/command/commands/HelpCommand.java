@@ -14,6 +14,7 @@ public class HelpCommand extends RobotCommand {
 		getRange().add(RobotCommandChatType.FRIEND_CHAT);
 		getRange().add(RobotCommandChatType.GROUP_TEMP_CHAT);
 		getRange().add(RobotCommandChatType.GROUP_CHAT);
+		getRange().add(RobotCommandChatType.STRANGER_CHAT);
 
 		getUser().add(RobotCommandUser.NORMAL_USER);
 		getUser().add(RobotCommandUser.GROUP_ADMINISTRATOR);
@@ -30,7 +31,7 @@ public class HelpCommand extends RobotCommand {
 	}
 
 	public String addSuperAdministratorHelp(String result) {
-		result = result + "\n--------------机器人管理--------------\n"
+		result = result + "\n--> Bot Administrator\n"
 				+ "@重载配置      重新加载配置文件";
 
 		return result;
@@ -40,9 +41,9 @@ public class HelpCommand extends RobotCommand {
 	public void runCommand(int subType, int msgId, long fromQQ, String msg,
 			int font, long fromGroup, String fromAnonymous) {
 
-		String result = "----------------帮助----------------\n"
+		String result = "--> Help\n"
 				+ "@帮助      查看使用帮助\n"
-				+ "@诗词解读      查看今天的每日诗歌的解读";
+				+ "@解读      查看今天的每日诗词的解读";
 
 		int authority = RobotCommandUser.getAuthority(fromGroup, fromQQ);
 
@@ -71,13 +72,8 @@ public class HelpCommand extends RobotCommand {
 
 		}
 
-		MessageManager.sendMessageBySituation(fromGroup, fromQQ, "1");
-
 		// 处理完文本后，最后发送文本
 		MessageManager.sendMessageBySituation(fromGroup, fromQQ, result);
-
-
-
 	}
 
 }

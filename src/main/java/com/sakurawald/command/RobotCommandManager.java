@@ -14,9 +14,9 @@ public class RobotCommandManager {
 	public RobotCommandManager() {
 
 		// 普通用户功能
-		commands.add(new HelpCommand("@帮助.*"));
-		commands.add(new DailyPoetryExplanationCommand("@诗歌解读.*"));
-		commands.add(new ReloadCommand("@重载配置.*"));
+		commands.add(new HelpCommand("#帮助.*"));
+		commands.add(new DailyPoetryExplanationCommand("#解读.*"));
+		commands.add(new ReloadCommand("#重载配置.*"));
 
 	}
 
