@@ -9,7 +9,6 @@ public class LoggerManager {
 
     public static final String SAD_FACIAL_EXPRESSION = "(ó﹏ò｡)";
 
-
     public static MiraiLogger getLogger() {
         return PluginMain.getInstance().getLogger();
     }
@@ -19,6 +18,12 @@ public class LoggerManager {
     }
 
     public static void logDebug(String content, boolean forceLog) {
+
+        // Is IDEA Mode ?
+        if (!PluginMain.isPluginLoaded()) {
+            System.out.println(content);
+            return;
+        }
 
         if (forceLog) {
             LoggerManager.getLogger().info(content);
@@ -37,7 +42,6 @@ public class LoggerManager {
         logDebug(content, false);
     }
 
-
     public static void logDebug(String type, String msg) {
 
         logDebug(type, msg, false);
@@ -47,11 +51,7 @@ public class LoggerManager {
         LoggerManager.getLogger().error(getExceptionInfo(e));
     }
 
-    /**
-     * 输出Exception到本地存储, 并且展示错误对话框.
-     */
     public static void reportException(Exception e) {
-        // 输出到<本地存储>
         LoggerManager.getLogger().error(getExceptionInfo(e));
     }
 

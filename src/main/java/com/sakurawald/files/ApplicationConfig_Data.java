@@ -11,11 +11,6 @@ public class ApplicationConfig_Data {
 
 	public Admin Admin = new Admin();
 	public class Admin {
-
-		public String RobotName = "Plum";
-
-		// 设置机器人要如何处理群添加邀请和好友添加邀请
-		// [!] 是决定是否自动处理请求。若为false，则机器人会直接拒绝邀请
 		public InvitationManager InvitationManager = new InvitationManager();
 		public class InvitationManager {
 
@@ -37,15 +32,9 @@ public class ApplicationConfig_Data {
 			public boolean forceCancel_FriendMessage = true;
 		}
 
-		// 管理员的QQ
-		// [!] 在config.yml文件中，如果只有1个QQ号位管理员，则YAML文档里看，和长整数差不多
-		// 但是要记住，administors在YAML中，是按String存储的，必要时，要加上双引号，防止报错
 		public ArrayList<Long> botAdministrators = new ArrayList<Long>() {
 			{
 				this.add(3172906506L);
-				this.add(1839395230L);
-				this.add(526026058L);
-				this.add(1966914133L);
 			}
 		};
 
@@ -61,13 +50,31 @@ public class ApplicationConfig_Data {
 		}
 
 		public DailyPoetry DailyPoetry = new DailyPoetry();
+
 		public class DailyPoetry {
 			public JinRiShiCi JinRiShiCi = new JinRiShiCi();
 			public class JinRiShiCi {
+				// 注意: 这里最好换成你自己的[今日诗词]Token, 可以到今日诗词网站获取属于自己的Token.
 				public String token = "paOa0DqOdpLn4FVVHNtEDgU5Imk89kXZ";
 
 			}
 			public boolean explanation_Enable = true;
+			public int maxRetryLimit = 3;
+		}
+
+		public AtFunction AtFunction = new AtFunction();
+		public class AtFunction {
+			public boolean enable = false;
+		}
+
+		public NudgeFunction NudgeFunction = new NudgeFunction();
+		public class NudgeFunction {
+			public boolean enable = true;
+
+			public HitoKoto HitoKoto = new HitoKoto();
+			public class HitoKoto {
+				public String get_URL_Params = "";
+			}
 		}
 
 	}

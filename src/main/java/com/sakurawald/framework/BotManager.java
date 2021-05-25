@@ -24,6 +24,4 @@ public class BotManager {
 		return PluginMain.getCurrentBot().getStrangers();
 	}
 
-
-
 }

@@ -1,25 +1,34 @@
 package com.sakurawald.utils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
+import com.gargoylesoftware.htmlunit.SilentCssErrorHandler;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.sakurawald.debug.LoggerManager;
+import org.apache.commons.logging.LogFactory;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+
+import javax.net.ssl.HttpsURLConnection;
 
 
 public class NetworkUtil {
 
 	// [!] 这里设置与URL有关的变量，ENCODE表示目标网页的编码
-	private final static String ENCODE = "utf-8";
+	private final static String ENCODE = "UTF-8";
 
-	// 去除HTML标签
-	public static String deleteHTMLTag(String htmlStr) {
+	public static String deleteHTMLTags(String htmlStr) {
 		final String regEx_script = "<script[^>]*?>[\\s\\S]*?<\\/script>"; // 定义script的正则表达式
 		final String regEx_style = "<style[^>]*?>[\\s\\S]*?<\\/style>"; // 定义style的正则表达式
 		final String regEx_html = "<[^>]+>"; // 定义HTML标签的正则表达式
@@ -54,14 +63,6 @@ public class NetworkUtil {
 		return htmlStr.trim(); // 返回文本字符串
 	}
 
-	// 动态获取网页的HTML源码
-	public static String getDynamicHTML(String URL) {
-
-
-
-
-		return null;
-	}
 
 	public static String getStaticHTML(String URL) {
 
@@ -100,8 +101,22 @@ public class NetworkUtil {
 		return result;
 	}
 
+	public static InputStream getInputStream(String URL){
+		URL URL_Object;
+		try {
+			URL_Object = new URL(URL);
+			HttpsURLConnection conn = (HttpsURLConnection) URL_Object.openConnection();
+			conn.setRequestMethod("GET");
+			conn.setConnectTimeout(10 * 1000);
+			return conn.getInputStream();
+		} catch (IOException e) {
+			LoggerManager.reportException(e);
+		}
 
-	public static String getURLDecoderString(String str) {
+		return null;
+	}
+
+	public static String decodeURL(String str) {
 		String result = "";
 		if (null == str) {
 			return "";
@@ -114,7 +129,7 @@ public class NetworkUtil {
 		return result;
 	}
 
-	public static String getURLEncoderString(String str) {
+	public static String encodeURL(String str) {
 		String result = "";
 		if (null == str) {
 			return "";
@@ -133,5 +148,50 @@ public class NetworkUtil {
 				.replace("&gt;", "");
 
 		return htmlStr;
+	}
+
+	public static String getDynamicHTML(String URL) {
+
+			try (WebClient webClient = new WebClient(BrowserVersion.CHROME)) {
+				/** WebClient Configs. **/
+
+				// 关闭WebClient错误警告.
+				LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log",
+						"org.apache.commons.logging.impl.NoOpLog");
+				java.util.logging.Logger.getLogger("com.gargoylesoftware").setLevel(
+						Level.OFF);
+				java.util.logging.Logger.getLogger("org.apache.http.client").setLevel(
+						Level.OFF);
+
+				//ajax
+				webClient.setAjaxController(new NicelyResynchronizingAjaxController());
+				//支持js
+				webClient.getOptions().setJavaScriptEnabled(true);
+				//忽略js错误
+				webClient.getOptions().setThrowExceptionOnScriptError(false);
+				//忽略css错误
+				webClient.setCssErrorHandler(new SilentCssErrorHandler());
+				//不执行CSS渲染
+				webClient.getOptions().setCssEnabled(false);
+				//超时时间
+				webClient.getOptions().setTimeout(10 * 1000);
+				//允许重定向
+				webClient.getOptions().setRedirectEnabled(true);
+				//允许cookie
+				webClient.getCookieManager().setCookiesEnabled(true);
+
+				//开始请求网站
+				HtmlPage page = webClient.getPage(URL);
+				String pageAsXml = page.asXml();
+				Document doc = Jsoup.parse(pageAsXml, URL);
+
+				return doc.toString();
+
+			} catch (Exception e) {
+				LoggerManager.reportException(e);
+			}
+
+
+			return null;
 	}
 }

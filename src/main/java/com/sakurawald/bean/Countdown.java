@@ -2,11 +2,11 @@ package com.sakurawald.bean;
 
 
 import com.sakurawald.debug.LoggerManager;
-import com.sakurawald.files.ApplicationConfig_Data;
 import com.sakurawald.files.FileManager;
 import com.sakurawald.utils.DateUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 
 /**
@@ -14,30 +14,25 @@ import java.util.Calendar;
  **/
 public class Countdown {
 
+    private final ArrayList<String> special_Countdown_Msg = new ArrayList<String>();
     private String countdown_Command = null;
     private String countdown_BasicCountdownMsg = null;
     private long countdown_Timestamp_Ms = 0;
     private Calendar countdown_Calendar = null;
-    private final ArrayList<String> special_Countdown_Msg = new ArrayList<String>();
     private String special_Countdown_Msgs = null;
 
     public Countdown(String countdown_command) {
 
         this.countdown_Command = countdown_command;
-
         /** 对单条Countdown_Command进行分割 **/
         String[] temp = countdown_command.split("\\|", 3);
-
         this.countdown_Command = countdown_command;
         this.countdown_BasicCountdownMsg = temp[0];
         this.countdown_Timestamp_Ms = Long.parseLong(temp[1]);
         this.countdown_Calendar = DateUtil
                 .translate_TimeStamp_Ms_To_Calendar(countdown_Timestamp_Ms);
         this.special_Countdown_Msgs = temp[2];
-
-        for (String single_countdown_msg : special_Countdown_Msgs.split("&")) {
-            special_Countdown_Msg.add(single_countdown_msg);
-        }
+        special_Countdown_Msg.addAll(Arrays.asList(special_Countdown_Msgs.split("&")));
 
     }
 
@@ -60,7 +55,7 @@ public class Countdown {
             Countdown cd = new Countdown(single_command);
             result.add(cd);
 
-            LoggerManager.logDebug("每日倒计时", "获取所有的Countdown_Commands: " + cd);
+            LoggerManager.logDebug("Countdown", "Get Countdown: " + cd);
         }
 
         return result;
@@ -70,11 +65,8 @@ public class Countdown {
      * 获取今天距离倒计时日期还有几天, 若今天为倒计时当天, 则返回0. 超过倒计时当天, 则返回负数
      **/
     private int getDistanceDays() {
-
-        int result = DateUtil.differentDaysByMillisecond(
+        return DateUtil.differentDaysByMillisecond(
                 Calendar.getInstance(), countdown_Calendar);
-
-        return result;
     }
 
     private String getSpecialCountdownMsg() {
@@ -96,7 +88,7 @@ public class Countdown {
      **/
     public String getTodayCountdownMsg() {
 
-        String result = null;
+        String result;
 
         /** 判断是否已经到达<倒计时日期> **/
         int distanceDays = getDistanceDays();
@@ -121,7 +113,7 @@ public class Countdown {
         return "Countdown [countdown_Command=" + countdown_Command
                 + ", countdown_Name=" + countdown_BasicCountdownMsg
                 + ", countdown_Timestamp_Ms=" + countdown_Timestamp_Ms
-                + ", countdown_Calendar=" + countdown_Calendar
+                + ", countdown_Calendar=" + DateUtil.getDateSimple(countdown_Calendar)
                 + ", countdown_Msg=" + special_Countdown_Msg
                 + ", countdown_Msgs=" + special_Countdown_Msgs + "]";
     }

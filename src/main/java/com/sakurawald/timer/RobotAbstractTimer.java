@@ -32,7 +32,7 @@ public abstract class RobotAbstractTimer extends TimerTask {
 	}
 
 	public void logDebugTimerState() {
-		LoggerManager.logDebug("[TimerSystem]", timerName + " >> run()");
+		LoggerManager.logDebug("TimerSystem", timerName + " >> run()");
 	}
 
 	public void setDelayTime(long delayTime) {

@@ -54,9 +54,7 @@ public class DateUtil {
         }
 
         /** 计算天数差 **/
-
         int days = (int) ((c2.getTime().getTime() - c1.getTime().getTime()) / (1000 * 3600 * 24));
-
         return days;
 
     }

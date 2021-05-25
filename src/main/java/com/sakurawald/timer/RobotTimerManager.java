@@ -17,32 +17,26 @@ public class RobotTimerManager extends Timer {
 
 	public void init() {
 		// 注册Timer
-		LoggerManager.logDebug("[TimerSystem]", "Register Timers.");
-		tasks.add(new DailySentenceTimer("DailyPoetry", 1000 * 3, 1000 * 60));
+		LoggerManager.logDebug("TimerSystem", "Register Timers.");
+		tasks.add(new DailySentenceTimer("DailyPoetry", 1000 * 10, 1000 * 60));
 		tasks.add(DailyPoetry_Timer.getInstance());
 
 		// 启动所有Timer
-		LoggerManager.logDebug("[TimerSystem]", "Start Timers.");
+		LoggerManager.logDebug("TimerSystem", "Start Timers.");
 		registerAll();
 	}
 
 
 	public static RobotTimerManager getInstance() {
-
 		if (instance == null) {
 			instance = new RobotTimerManager();
 		}
-
-
-
 		return instance;
 	}
 
 	private RobotTimerManager() {
 		this.init();
 	}
-
-
 
 	// 注册/开始所有任务
 	public void registerAll() {

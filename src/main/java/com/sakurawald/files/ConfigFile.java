@@ -7,9 +7,6 @@ import com.sakurawald.utils.FileUtil;
 
 import java.io.*;
 
-/**
- * 描述一个<配置文件对象>.
- */
 public class ConfigFile {
 
     /**
@@ -20,7 +17,7 @@ public class ConfigFile {
         String result = null;
 
         result = FileUtil.getJavaRunPath();
-        result = result + "\\Plum\\";
+        result = result + "\\plugins\\Plum\\";
 
         return result;
     }

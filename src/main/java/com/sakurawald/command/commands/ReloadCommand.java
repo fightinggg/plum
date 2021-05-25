@@ -7,6 +7,8 @@ import com.sakurawald.debug.LoggerManager;
 import com.sakurawald.files.FileManager;
 import com.sakurawald.framework.BotManager;
 import com.sakurawald.framework.MessageManager;
+import net.mamoe.mirai.message.data.MessageChain;
+
 //从本地重新加载配置文件到内存
 public class ReloadCommand extends RobotCommand {
 
@@ -21,8 +23,7 @@ public class ReloadCommand extends RobotCommand {
 	}
 
 	@Override
-	public void runCommand(int subType, int msgId, long fromQQ, String msg,
-			int font, long fromGroup, String fromAnonymous) {
+	public void runCommand(int msgType, int time, long fromGroup, long fromQQ, MessageChain messageChain) {
 
 		try {
 			FileManager.applicationConfig_File.reloadFile();

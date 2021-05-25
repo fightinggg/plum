@@ -4,9 +4,9 @@ package com.sakurawald;
 import com.sakurawald.command.RobotCommandChatType;
 import com.sakurawald.command.RobotCommandManager;
 import com.sakurawald.debug.LoggerManager;
-import com.sakurawald.files.ApplicationConfig_Data;
 import com.sakurawald.files.FileManager;
-import com.sakurawald.framework.BotManager;
+import com.sakurawald.function.AtFunction;
+import com.sakurawald.function.NudgeFunction;
 import com.sakurawald.timer.RobotTimerManager;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.console.plugin.jvm.JavaPlugin;
@@ -14,12 +14,11 @@ import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescriptionBuilder;
 import net.mamoe.mirai.event.GlobalEventChannel;
 import net.mamoe.mirai.event.events.*;
 
-import java.io.IOException;
-
 public final class PluginMain extends JavaPlugin {
 
-    // INSTANCE字段必须设置为public, 否则mirai-console在反射时会失败.
+    // WARNING: INSTANCE字段必须设置为public, 否则mirai-console在反射时会失败.
     public static final PluginMain INSTANCE = new PluginMain();
+    private static boolean pluginLoaded = false;
     private static RobotCommandManager commandManager = null;
     private static Bot CURRENT_BOT = null;
 
@@ -31,12 +30,16 @@ public final class PluginMain extends JavaPlugin {
         return CURRENT_BOT;
     }
 
+    public static boolean isPluginLoaded() {
+        return pluginLoaded;
+    }
+
     public static RobotCommandManager getCommandManager() {
         return commandManager;
     }
 
     private PluginMain() {
-        super(new JvmPluginDescriptionBuilder("com.sakurawald.Plum", "Baka")
+        super(new JvmPluginDescriptionBuilder("com.sakurawald.Plum", "1.0")
                 .name("Plum")
                 .author("SakuraWald")
                 .build());
@@ -44,6 +47,8 @@ public final class PluginMain extends JavaPlugin {
 
     @Override
     public void onEnable() {
+
+        pluginLoaded = true;
         LoggerManager.logDebug("Plum >> Enable.", true);
         LoggerManager.logDebug("Start Init...", true);
 
@@ -54,7 +59,7 @@ public final class PluginMain extends JavaPlugin {
         // Init FileSystem.
         try {
             LoggerManager.logDebug("FileSystem", "Init FileSystem.", true);
-            FileManager.getInstance();
+            FileManager.getSingleInstance();
         } catch (IllegalArgumentException e) {
             LoggerManager.reportException(e);
         }
@@ -64,16 +69,13 @@ public final class PluginMain extends JavaPlugin {
         GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessageEvent.class,
                 event -> {
                     {
-                        try {
-                            commandManager.receiveMessage(
+                        commandManager.receiveMessage(
                                     RobotCommandChatType.GROUP_CHAT.getType(),
-                                    -1, event.getSender().getId(), event
-                                            .getMessage().contentToString(),
-                                    -1, event.getGroup().getId(), null);
-                        } catch (Exception e) {
-                            LoggerManager.reportException(e);
-                        }
+                                    event.getTime(), event.getGroup().getId(),
+                                    event.getSender().getId(), event.getMessage());
 
+                        // Call -> AtFunction
+                        AtFunction.handleEvent(event);
                     }
                 });
 
@@ -83,15 +85,10 @@ public final class PluginMain extends JavaPlugin {
                 FriendMessageEvent.class,
                 event -> {
                     {
-                        try {
                             commandManager.receiveMessage(
                                     RobotCommandChatType.FRIEND_CHAT.getType(),
-                                    -1, event.getSender().getId(), event
-                                            .getMessage().contentToString(),
-                                    -1, -1, null);
-                        } catch (Exception e) {
-                            LoggerManager.reportException(e);
-                        }
+                                    event.getTime(), -1,  event.getSender().getId(),
+                                    event.getMessage());
 
                     }
 
@@ -101,19 +98,10 @@ public final class PluginMain extends JavaPlugin {
         GlobalEventChannel.INSTANCE.subscribeAlways(
                 StrangerMessageEvent.class,
                 event -> {
-
                     {
-
-                        try {
                             commandManager.receiveMessage(
                                     RobotCommandChatType.STRANGER_CHAT.getType(),
-                                    -1, event.getSender().getId(), event
-                                            .getMessage().contentToString(),
-                                    -1, -1, null);
-                        } catch (Exception e) {
-                            LoggerManager.reportException(e);
-                        }
-
+                                    event.getTime(), -1, event.getSender().getId(), event.getMessage());
                     }
 
                 });
@@ -124,16 +112,13 @@ public final class PluginMain extends JavaPlugin {
                 GroupTempMessageEvent.class,
                 event -> {
                     {
-                        try {
+
                             commandManager.receiveMessage(
                                     RobotCommandChatType.GROUP_TEMP_CHAT
-                                            .getType(), -1, event.getSender()
-                                            .getId(), event.getMessage()
-                                            .contentToString(), -1, event
-                                            .getGroup().getId(), null);
-                        } catch (Exception e) {
-                            LoggerManager.reportException(e);
-                        }
+                                            .getType(), event.getTime(),
+                                            event.getGroup().getId(),
+                                             event.getSender().getId(), event.getMessage());
+
 
                     }
                 });
@@ -145,6 +130,11 @@ public final class PluginMain extends JavaPlugin {
                 tryInitBot(event.getBot());
             }
         });
+
+        /** 戳一戳事件 **/
+        // Call -> NudgeFunction
+        GlobalEventChannel.INSTANCE.subscribeAlways(NudgeEvent.class, NudgeFunction::handleEvent);
+
 
         /** 接收好友添加请求事件 **/
         GlobalEventChannel.INSTANCE

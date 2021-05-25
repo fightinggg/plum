@@ -1,7 +1,7 @@
 package com.sakurawald.command;
 
-import com.sakurawald.framework.BotManager;
 import com.sakurawald.framework.MessageManager;
+import net.mamoe.mirai.message.data.MessageChain;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -15,13 +15,28 @@ public abstract class RobotCommand {
 	private ArrayList<RobotCommandChatType> ranges = new ArrayList<RobotCommandChatType>();
 	private ArrayList<RobotCommandUser> users = new ArrayList<RobotCommandUser>();
 	// 表示匹配到该指令的正则表达式
-	private String rule;
-	private Pattern pattern;
+	private final String rule;
+	private final Pattern pattern;
 
 	public RobotCommand(String rule) {
 		this.rule = rule;
 		this.pattern = Pattern.compile(rule);
+	}
 
+	public ArrayList<RobotCommandChatType> getRanges() {
+		return ranges;
+	}
+
+	public ArrayList<RobotCommandUser> getUsers() {
+		return users;
+	}
+
+	public String getRule() {
+		return rule;
+	}
+
+	public Pattern getPattern() {
+		return pattern;
 	}
 
 	public ArrayList<RobotCommandChatType> getRange() {
@@ -32,32 +47,30 @@ public abstract class RobotCommand {
 		return users;
 	}
 
-	// 判断用户使用的是不是这个指令
+	/** 判断用户使用的是不是这个指令 **/
 	public boolean isThisCommand(String msg) {
 		Matcher m = pattern.matcher(msg);
 
 		return m.matches();
 	}
 
-	// 在执行该指令前，先检查该指令是否符合规定
-	public boolean runCheckUp(int subType, int msgId, long fromQQ, String msg,
-			int font, long fromGroup, String fromAnonymous) {
+	/** 在执行该指令前，先检查该指令是否符合规定 **/
+	public boolean runCheckUp(int msgType, int time, long fromGroup, long fromQQ, MessageChain messageChain) {
 
 		/** 指令的使用范围检测 **/
-
 		// 检查是否符合该指令的使用范围（聊天类型）
 		boolean flag = false;
 		for (RobotCommandChatType type : ranges) {
 
-			if (subType == type.getType()) {
+			if (msgType == type.getType()) {
 				flag = true;
 				break;
 			}
 		}
 
-		if (flag == false) {
+		if (!flag) {
 			MessageManager.sendMessageBySituation(fromGroup, fromQQ,
-					"很抱歉，该指令不能在当前聊天类型中使用");
+					"很抱歉，该指令不能在当前聊天类型中使用。");
 			return false;
 		}
 
@@ -71,14 +84,14 @@ public abstract class RobotCommand {
 		int authority = RobotCommandUser.getAuthority(fromGroup, fromQQ);
 		for (RobotCommandUser user : users) {
 
-			if (authority == user.getUser()) {
+			if (authority == user.getUserPermission()) {
 
 				flag = true;
 				break;
 			}
 
 		}
-		if (flag == false) {
+		if (!flag) {
 			MessageManager.sendMessageBySituation(fromGroup, fromQQ,
 					"很抱歉，您没有权限使用该指令~");
 			return false;
@@ -88,6 +101,5 @@ public abstract class RobotCommand {
 	}
 
 	// 正式执行该指令
-	public abstract void runCommand(int subType, int msgId, long fromQQ,
-			String msg, int font, long fromGroup, String fromAnonymous);
+	public abstract void runCommand(int msgType, int time, long fromGroup, long fromQQ, MessageChain messageChain);
 }

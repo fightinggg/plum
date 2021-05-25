@@ -1,5 +1,7 @@
 package com.sakurawald.timer;
 
+import com.sakurawald.debug.LoggerManager;
+
 public interface TimerController {
 
     boolean isPrepareStage();
