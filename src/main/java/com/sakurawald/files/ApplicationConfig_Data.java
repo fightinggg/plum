@@ -6,7 +6,7 @@ public class ApplicationConfig_Data {
 
 	public Debug Debug = new Debug();
 	public class Debug {
-		public boolean enable = true;
+		public boolean enable = false;
 	}
 
 	public Admin Admin = new Admin();
@@ -65,6 +65,12 @@ public class ApplicationConfig_Data {
 		public AtFunction AtFunction = new AtFunction();
 		public class AtFunction {
 			public boolean enable = false;
+
+			public RandomImage RandomImage = new RandomImage();
+			public class RandomImage {
+				/** 获取随机图片的网站 **/
+				public String Random_Image_URLs = "http://www.dmoe.cc/random.php|http://api.mtyqx.cn/tapi/random.php|http://api.mtyqx.cn/api/random.php";
+			}
 		}
 
 		public NudgeFunction NudgeFunction = new NudgeFunction();

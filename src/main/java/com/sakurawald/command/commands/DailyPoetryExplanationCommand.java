@@ -74,9 +74,9 @@ public class DailyPoetryExplanationCommand extends RobotCommand {
 		sendMsg = sendMsg.trim();
 
 		/** 字数检测 **/
-		String defaultMsg = "诗歌解读，" + DateUtil.getNowYear() + "年"
+		String defaultMsg = "诗词解读，" + DateUtil.getNowYear() + "年"
 				+ DateUtil.getNowMonth() + "月" + DateUtil.getNowDay()
-				+ "日！\n\n" + "●每日一诗\n" + "〖链接〗由于本次诗歌解读文本过长，请直接点击链接查看："
+				+ "日！\n\n" + "●每日一诗\n" + "〖链接〗由于本次诗词解读文本过长，请直接点击链接查看："
 				+ "\n" + "https://hanyu.baidu.com/";
 
 		sendMsg = MessageManager.checkLengthAndModifySendMsg(sendMsg, defaultMsg);

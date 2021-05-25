@@ -71,8 +71,9 @@ public class DailySentenceTimer extends DailyTimer implements DefaultPlan {
 		if (nowDay != lastSendDay) {
 
 			int nowHour = DateUtil.getNowHour();
+			int nowMinute = DateUtil.getNowMinute();
 
-			if (nowHour == 5) {
+			if (nowHour == 5 && nowMinute <= 30) {
 				lastSendDay = nowDay;
 				return true;
 			}
@@ -110,7 +111,7 @@ public class DailySentenceTimer extends DailyTimer implements DefaultPlan {
 			// Do nothing.
 		}
 
-		sendMsg = sendMsg.trim() + "\n\n●每日一句：\n" + todayMotto.getContent_cn() + "( "
+		sendMsg = sendMsg.trim() + "\n\n●今日格言：\n" + todayMotto.getContent_cn() + "( "
 				+ todayMotto.getContent_en() + " )";
 
 		// Has Translation ?

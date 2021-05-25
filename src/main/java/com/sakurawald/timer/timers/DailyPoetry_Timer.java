@@ -46,9 +46,7 @@ public class DailyPoetry_Timer extends DailyTimer {
 			}
 
 			if (nowHour == 21) {
-
 				lastPrepareDay = nowDay;
-
 				return true;
 			}
 
@@ -65,8 +63,9 @@ public class DailyPoetry_Timer extends DailyTimer {
 		if (nowDay != lastSendDay) {
 
 			int nowHour = DateUtil.getNowHour();
+			int nowMinute = DateUtil.getNowMinute();
 
-			if (nowHour == 21) {
+			if (nowHour == 21 && nowMinute <= 30) {
 				lastSendDay = nowDay;
 				return true;
 			}
@@ -84,8 +83,8 @@ public class DailyPoetry_Timer extends DailyTimer {
 
 		sendMsg = "晚安，" + DateUtil.getNowYear() + "年"
 				+ DateUtil.getNowMonth() + "月" + DateUtil.getNowDay()
-				+ "日~\n\n" + "●每日一诗\n" + "〖标题〗" + todayPoetry.getTitle() + "\n" + "〖作者〗"
-				+ "（" + todayPoetry.getDynasty()+ "） " + todayPoetry.getAuthor() + "\n" + "〖诗歌〗\n"
+				+ "日~\n\n" + "●今日诗词\n" + "〖标题〗" + todayPoetry.getTitle() + "\n" + "〖作者〗"
+				+ "（" + todayPoetry.getDynasty()+ "） " + todayPoetry.getAuthor() + "\n" + "〖诗词〗\n"
 				+ todayPoetry.getContent();
 
 		LoggerManager.logDebug("TimerSystem", "DailyPoetry: \n" + sendMsg);
