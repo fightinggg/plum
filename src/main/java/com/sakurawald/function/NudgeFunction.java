@@ -4,6 +4,7 @@ import com.sakurawald.PluginMain;
 import com.sakurawald.api.HitoKoto_API;
 import com.sakurawald.files.FileManager;
 import com.sakurawald.framework.MessageManager;
+import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.event.events.NudgeEvent;
 
 public class NudgeFunction {
@@ -14,7 +15,11 @@ public class NudgeFunction {
             return;
         }
 
-        long fromGroup = event.getSubject().getId();
+        long fromGroup = -1;
+        if (event.getSubject() instanceof Group) {
+            fromGroup = ((Group) event.getSubject()).getId();
+        }
+
         long fromQQ = event.getFrom().getId();
         long targetQQ = event.getTarget().getId();
 
