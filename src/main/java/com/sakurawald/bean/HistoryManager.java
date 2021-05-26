@@ -76,7 +76,7 @@ public class HistoryManager<E> {
     }
 
     public String getLogDebugType() {
-        return "[调用历史管理者 - " + this.getHistory_manager_name() + "]";
+        return "调用历史管理者 - " + this.getHistory_manager_name() + "";
     }
 
     /**

@@ -72,7 +72,9 @@ public final class PluginMain extends JavaPlugin {
         // Init AudioUtils.
         LoggerManager.logDebug("Init AudioUtils.", true);
         try {
-            AudioUtils.init(new File(MusicPlatAPI.getVoicesPath()));
+            File cacheFile = new File(MusicPlatAPI.getVoicesPath());
+            cacheFile.mkdirs();
+            AudioUtils.init(cacheFile);
         } catch (IOException e) {
             LoggerManager.reportException(e);
         }

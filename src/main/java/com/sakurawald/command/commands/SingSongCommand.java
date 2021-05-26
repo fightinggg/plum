@@ -15,6 +15,7 @@ import com.sakurawald.files.FileManager;
 import com.sakurawald.framework.MessageManager;
 import com.sakurawald.function.SingManager;
 
+import com.sakurawald.utils.LanguageUtil;
 import io.github.mzdluo123.silk4j.AudioUtils;
 import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.Voice;
@@ -78,13 +79,14 @@ public class SingSongCommand extends RobotCommand {
 		String msg = messageChain.contentToString();
 		if (msg
 				.matches("^(?:(?:唱歌)|(?:唱)|(?:点歌)|(?:听歌)|(?:我想听)|(?:来首)|(?:想听)|(?:给我唱))[\\s]*$")) {
-			String help = "指令使用方法：\n"
-					+ "\"唱歌+空格+[歌曲名]\"" + "\n\n●注意\n"
-					+ "若搜索到的歌曲不是你想要的版本，则需要手动指定歌手~" + "\n"
-					 + "付费原唱歌曲无法被指定，将自动选择合适的翻唱版本！"
-					+ "\n\n用法示例：\n"
+			String help =  "用法示例：\n"
 					+ "\"唱歌 霜雪千年\"" + "\n"
-					+ "\"唱歌 霜雪千年 " + RANDOM_SING_FLAG +"\"\n";
+					+ "\"唱歌 霜雪千年 " + RANDOM_SING_FLAG +"\""
+					+ "\n\n●注意\n"
+					+ "○指令后面必须添加1个空格" + "\n"
+					+ "○若搜索到的歌曲不是你想要的版本，则需要手动指定歌手~" + "\n"
+					+ "○付费原唱歌曲无法被指定，将自动选择合适的翻唱版本！";
+
 			MessageManager.sendMessageBySituation(fromGroup, fromQQ, help);
 			return;
 		}
@@ -151,6 +153,20 @@ public class SingSongCommand extends RobotCommand {
 						mpa = KugouMusicAPI.getInstance();
 						si = mpa.checkAndGetSongInformation(input_music_name,
 								random_music_flag);
+					}
+
+					/** 搜索不到指定的音乐, 结束代码 **/
+					if (si == null) {
+						LoggerManager.logDebug("SingSong",
+								"所唱的歌曲搜索不到, 结束代码: input_music_name = "
+										+ input_music_name, true);
+						MessageManager.sendMessageBySituation(fromGroup, fromQQ,
+								LanguageUtil
+										.transObject_X(
+												1,
+												FileManager.applicationConfig_File.getSpecificDataInstance().Functions.SingSongFunction.not_found_music_msg,
+												input_music_name));
+						return;
 					}
 
 					/** 音乐文件下载逻辑 **/
