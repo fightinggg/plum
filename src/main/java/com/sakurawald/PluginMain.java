@@ -1,6 +1,7 @@
 package com.sakurawald;
 
 
+import com.sakurawald.api.MusicPlatAPI;
 import com.sakurawald.command.RobotCommandChatType;
 import com.sakurawald.command.RobotCommandManager;
 import com.sakurawald.debug.LoggerManager;
@@ -8,11 +9,15 @@ import com.sakurawald.files.FileManager;
 import com.sakurawald.function.AtFunction;
 import com.sakurawald.function.NudgeFunction;
 import com.sakurawald.timer.RobotTimerManager;
+import io.github.mzdluo123.silk4j.AudioUtils;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.console.plugin.jvm.JavaPlugin;
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescriptionBuilder;
 import net.mamoe.mirai.event.GlobalEventChannel;
 import net.mamoe.mirai.event.events.*;
+
+import java.io.File;
+import java.io.IOException;
 
 public final class PluginMain extends JavaPlugin {
 
@@ -61,6 +66,14 @@ public final class PluginMain extends JavaPlugin {
             LoggerManager.logDebug("FileSystem", "Init FileSystem.", true);
             FileManager.getSingleInstance();
         } catch (IllegalArgumentException e) {
+            LoggerManager.reportException(e);
+        }
+
+        // Init AudioUtils.
+        LoggerManager.logDebug("Init AudioUtils.", true);
+        try {
+            AudioUtils.init(new File(MusicPlatAPI.getVoicesPath()));
+        } catch (IOException e) {
             LoggerManager.reportException(e);
         }
 

@@ -65,7 +65,7 @@ public class DailyPoetry_Timer extends DailyTimer {
 			int nowHour = DateUtil.getNowHour();
 			int nowMinute = DateUtil.getNowMinute();
 
-			if (nowHour == 21 && nowMinute <= 30) {
+			if (nowHour == 21 && nowMinute <= 10) {
 				lastSendDay = nowDay;
 				return true;
 			}

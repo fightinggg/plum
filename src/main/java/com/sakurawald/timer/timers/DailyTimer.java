@@ -29,7 +29,6 @@ public abstract class DailyTimer extends RobotAbstractTimer implements TimerCont
 
     @Override
     public void run() {
-        logDebugTimerState();
         autoControlTimer();
     }
 

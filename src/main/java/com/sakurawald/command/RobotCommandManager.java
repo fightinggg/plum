@@ -15,6 +15,8 @@ public class RobotCommandManager {
 
 	public RobotCommandManager() {
 		// Add Commands.
+		commands.add(new SingSongCommand(
+				"^(?:(?:唱歌)|(?:唱)|(?:点歌)|(?:听歌)|(?:我想听)|(?:来首)|(?:想听)|(?:给我唱))[\\s\\S]*$"));
 		commands.add(new HelpCommand("#帮助.*"));
 		commands.add(new DailyPoetryExplanationCommand("#解读.*"));
 		commands.add(new ReloadCommand("#重载配置.*"));
@@ -22,7 +24,7 @@ public class RobotCommandManager {
 
 	// 判断某条信息是否为指令，快速判断，防止网络攻击，优化性能
 	public boolean isCommand(String msg) {
-		return msg.charAt(0) == COMMAND_PREFIX_CHAR;
+		return true;
 	}
 
 	// 机器人收到的信息，无论私聊还是群聊，都调用这个函数执行

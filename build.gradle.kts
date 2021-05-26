@@ -23,5 +23,5 @@ dependencies {
     // https://mvnrepository.com/artifact/net.sourceforge.htmlunit/htmlunit
     implementation("net.sourceforge.htmlunit:htmlunit:2.50.0")
 
-
+    implementation(fileTree(mapOf("dir" to "libs","include" to listOf("*.jar"))))
 }

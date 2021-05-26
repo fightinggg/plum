@@ -6,7 +6,7 @@ public class ApplicationConfig_Data {
 
 	public Debug Debug = new Debug();
 	public class Debug {
-		public boolean enable = false;
+		public boolean enable = true;
 	}
 
 	public Admin Admin = new Admin();
@@ -43,6 +43,11 @@ public class ApplicationConfig_Data {
 	public Functions Functions = new Functions();
 	public class Functions {
 
+		public FunctionManager FunctionManager = new FunctionManager();
+		public class FunctionManager {
+			public String callTooOftenMsg = "调用该功能过于频繁，请稍后再试试吧~";
+		}
+
 		public DailyCountdown DailyCountdown = new DailyCountdown();
 		public class DailyCountdown {
 			public boolean enable = true;
@@ -76,11 +81,21 @@ public class ApplicationConfig_Data {
 		public NudgeFunction NudgeFunction = new NudgeFunction();
 		public class NudgeFunction {
 			public boolean enable = true;
+			public int perUseIntervalSecond = 3;
 
 			public HitoKoto HitoKoto = new HitoKoto();
 			public class HitoKoto {
 				public String get_URL_Params = "";
 			}
+		}
+
+		public SingSongFunction SingSongFunction = new SingSongFunction();
+		public class SingSongFunction {
+			public boolean enable = true;
+			public int perUseIntervalSecond = 10;
+			public int maxVoiceFileSize = 9000000;
+			public String music_need_paid_msg = "很抱歉，这可能是一首付费歌曲。";
+			public String download_music_file_too_big_msg = "这首歌太长啦！";
 		}
 
 	}

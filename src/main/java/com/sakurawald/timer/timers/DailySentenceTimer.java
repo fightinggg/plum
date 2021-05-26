@@ -73,7 +73,7 @@ public class DailySentenceTimer extends DailyTimer implements DefaultPlan {
 			int nowHour = DateUtil.getNowHour();
 			int nowMinute = DateUtil.getNowMinute();
 
-			if (nowHour == 5 && nowMinute <= 30) {
+			if (nowHour == 5 && nowMinute <= 10) {
 				lastSendDay = nowDay;
 				return true;
 			}

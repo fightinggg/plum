@@ -80,6 +80,18 @@ public class DateUtil {
         return c;
     }
 
+    // 计算两个日期相差多少秒
+    public static long diffSeconds(Calendar big, Calendar small) {
+
+        long nm = 1000;
+
+        long diff = big.getTime().getTime() - small.getTime().getTime(); // 获得两个时间的毫秒时间差异
+
+        long result = diff / nm;
+
+        return result;
+    }
+
     public static Calendar getDataSimple(String date) {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date d = null;

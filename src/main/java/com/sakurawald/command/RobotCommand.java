@@ -50,7 +50,6 @@ public abstract class RobotCommand {
 	/** 判断用户使用的是不是这个指令 **/
 	public boolean isThisCommand(String msg) {
 		Matcher m = pattern.matcher(msg);
-
 		return m.matches();
 	}
 

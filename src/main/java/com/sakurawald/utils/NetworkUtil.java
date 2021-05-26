@@ -1,8 +1,10 @@
 package com.sakurawald.utils;
 
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,6 +15,9 @@ import com.gargoylesoftware.htmlunit.SilentCssErrorHandler;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.sakurawald.debug.LoggerManager;
+import com.sakurawald.exception.CanNotDownloadFileException;
+import com.sakurawald.exception.FileTooBigException;
+import com.sakurawald.files.FileManager;
 import org.apache.commons.logging.LogFactory;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -97,6 +102,16 @@ public class NetworkUtil {
 		}
 		result = text.substring(zLen, yLen);
 		return result;
+	}
+
+	public static InputStream getInputStream(File file) {
+		try {
+			return new FileInputStream(file);
+		} catch (FileNotFoundException e) {
+			LoggerManager.reportException(e);
+		}
+
+		return null;
 	}
 
 	public static InputStream getInputStream(String URL){
@@ -214,5 +229,66 @@ public class NetworkUtil {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static String downloadVoiceFile(String urlPath, String downloadDir) throws FileTooBigException, CanNotDownloadFileException {
+		return downloadFile(urlPath, downloadDir, FileManager.applicationConfig_File.getSpecificDataInstance().Functions.SingSongFunction.maxVoiceFileSize);
+	}
+
+	public static String downloadFile(String urlPath, String downloadDir, int acceptFileMaxLength)
+			throws CanNotDownloadFileException, FileTooBigException {
+		File file = null;
+		String path = null;
+		try {
+			URL url = new URL(urlPath);
+			URLConnection urlConnection = url.openConnection();
+			HttpURLConnection httpURLConnection = (HttpURLConnection) urlConnection;
+			httpURLConnection.setRequestMethod("GET");
+			httpURLConnection.setRequestProperty("Charset", "UTF-8");
+			httpURLConnection.connect();
+
+			int fileLength = httpURLConnection.getContentLength();
+			LoggerManager.logDebug("NetworkSystem", "Download: URL_path = " + urlPath
+					+ ", fileLength = " + fileLength);
+
+			/**
+			 * [!] 判断是否为付费歌曲。 若一首歌曲是付费歌曲，则网易云的音乐下载链接会404
+			 * **/
+			if (fileLength == 0) {
+				throw new CanNotDownloadFileException();
+			}
+
+			if (fileLength > acceptFileMaxLength) {
+				throw new FileTooBigException();
+			}
+
+			BufferedInputStream bin = new BufferedInputStream(
+					httpURLConnection.getInputStream());
+
+			path = downloadDir;
+
+			System.out.println(path);
+
+			file = new File(path);
+
+			if (!file.getParentFile().exists()) {
+				file.getParentFile().mkdirs();
+			}
+
+			OutputStream out = new FileOutputStream(file);
+			int size = 0;
+			int len = 0;
+			byte[] buf = new byte[1024];
+			while ((size = bin.read(buf)) != -1) {
+				len += size;
+				out.write(buf, 0, size);
+			}
+			bin.close();
+			out.close();
+		} catch (Exception e) {
+			LoggerManager.reportException(e);
+		}
+
+		return null;
 	}
 }

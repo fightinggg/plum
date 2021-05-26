@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="silk4j-1.2-dev">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../Jars/silk4j-1.2-dev.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
