@@ -5,6 +5,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.sakurawald.bean.SongInformation;
 import com.sakurawald.debug.LoggerManager;
+import net.mamoe.mirai.message.data.MessageUtils;
+import net.mamoe.mirai.message.data.MusicKind;
+import net.mamoe.mirai.message.data.MusicShare;
 import okhttp3.*;
 
 import java.io.IOException;
@@ -121,9 +124,7 @@ public class NeteaseCloudMusicAPI extends MusicPlatAPI {
             return null;
         }
 
-        JsonParser jParser = new JsonParser();
-        JsonObject jo = (JsonObject) jParser
-                .parse(getMusicListByMusicName_JSON);// 构造JsonObject对象
+        JsonObject jo = (JsonObject) JsonParser.parseString(getMusicListByMusicName_JSON);
 
         JsonObject jo_1 = jo.getAsJsonObject("result");
 
@@ -151,6 +152,7 @@ public class NeteaseCloudMusicAPI extends MusicPlatAPI {
             // 新建Si对象
             result = new SongInformation(name, id, "网易云音乐");
             result.setMusic_File_URL(getDownloadMusicURL(result.getMusic_ID()));
+            result.setMusic_Page_URL("http://music.163.com/song/" + id);
 
             if (i >= index) {
                 LoggerManager.logDebug(getLogType_name(),
@@ -197,6 +199,14 @@ public class NeteaseCloudMusicAPI extends MusicPlatAPI {
 
         return jo_1 != null && jo_1.get("songs") != null
                 && !jo_1.get("songs").isJsonNull();
+    }
+
+    @Override
+    public String getCardCode(SongInformation si) {
+        return MessageUtils.newChain(new MusicShare(MusicKind.NeteaseCloudMusic, si.getMusic_Name(),
+                si.getSummary(), si.getMusic_Page_URL(), si.getImg_URL(),
+                si.getMusic_File_URL(),
+                "[点歌] " + si.getMusic_Name())).serializeToMiraiCode();
     }
 
 }

@@ -24,4 +24,20 @@ public class BotManager {
 		return PluginMain.getCurrentBot().getStrangers();
 	}
 
+	public static Member getGroupMemberCard(long fromGroup, long fromQQ) {
+		Group group = PluginMain.getCurrentBot().getGroup(fromGroup);
+		Member groupMember = group.get(fromQQ);
+		return groupMember;
+	}
+
+	public static String getGroupMemberName(Member groupMember) {
+
+		String ret = groupMember.getNameCard();
+		if (ret.isEmpty()) {
+			ret = groupMember.getNick();
+		}
+
+		return ret;
+	}
+
 }

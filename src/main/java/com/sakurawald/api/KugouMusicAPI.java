@@ -7,6 +7,9 @@ import com.sakurawald.bean.SongInformation;
 import com.sakurawald.debug.LoggerManager;
 import com.sakurawald.utils.MD5Util;
 import com.sakurawald.utils.NetworkUtil;
+import net.mamoe.mirai.message.data.MessageUtils;
+import net.mamoe.mirai.message.data.MusicKind;
+import net.mamoe.mirai.message.data.MusicShare;
 import okhttp3.OkHttpClient;
 import okhttp3.OkHttpClient.Builder;
 import okhttp3.Request;
@@ -27,6 +30,14 @@ public class KugouMusicAPI extends MusicPlatAPI {
 
     public static KugouMusicAPI getInstance() {
         return instance;
+    }
+
+    @Override
+    public String getCardCode(SongInformation si) {
+        return MessageUtils.newChain(new MusicShare(MusicKind.MiguMusic, si.getMusic_Name(),
+                si.getSummary(), si.getMusic_Page_URL(), si.getImg_URL(),
+                si.getMusic_File_URL(),
+                "[点歌] " + si.getMusic_Name())).serializeToMiraiCode();
     }
 
     private boolean canAccess(String keyContent) {

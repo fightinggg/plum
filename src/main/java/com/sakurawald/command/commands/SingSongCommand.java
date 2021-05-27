@@ -4,6 +4,7 @@ import com.sakurawald.PluginMain;
 import com.sakurawald.api.KugouMusicAPI;
 import com.sakurawald.api.MusicPlatAPI;
 import com.sakurawald.api.NeteaseCloudMusicAPI;
+import com.sakurawald.api.TencentMusicAPI;
 import com.sakurawald.bean.SongInformation;
 import com.sakurawald.command.RobotCommand;
 import com.sakurawald.command.RobotCommandChatType;
@@ -12,11 +13,13 @@ import com.sakurawald.debug.LoggerManager;
 import com.sakurawald.exception.CanNotDownloadFileException;
 import com.sakurawald.exception.FileTooBigException;
 import com.sakurawald.files.FileManager;
+import com.sakurawald.framework.BotManager;
 import com.sakurawald.framework.MessageManager;
 import com.sakurawald.function.SingManager;
 
 import com.sakurawald.utils.LanguageUtil;
 import io.github.mzdluo123.silk4j.AudioUtils;
+import net.mamoe.mirai.contact.Member;
 import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.Voice;
 import net.mamoe.mirai.utils.ExternalResource;
@@ -129,7 +132,11 @@ public class SingSongCommand extends RobotCommand {
 									+ input_music_name, true);
 
 					// [!] 使用用户输入的歌曲名在网络上找歌曲
-					SongInformation si = null;
+					SongInformation si;
+
+					// 点歌 -> 以卡片形式分享.
+					boolean send_card_flag = msg.contains("点歌");
+
 					random_music_flag = SingManager.getInstance().isRandomSing(
 							msg);
 
@@ -155,6 +162,19 @@ public class SingSongCommand extends RobotCommand {
 								random_music_flag);
 					}
 
+					/** 尝试第三音库: QQ音乐 **/
+					if (si == null) {
+						LoggerManager.logDebug("SingSong",
+								"即将尝试第三音库 - QQ音乐: input_music_name = "
+										+ input_music_name, true);
+						mpa = TencentMusicAPI.getInstance();
+						si = mpa.checkAndGetSongInformation(input_music_name,
+								random_music_flag);
+
+						// 注意: QQ音乐平台的歌曲必定以 卡片形式 发送.
+						send_card_flag = true;
+					}
+
 					/** 搜索不到指定的音乐, 结束代码 **/
 					if (si == null) {
 						LoggerManager.logDebug("SingSong",
@@ -169,25 +189,39 @@ public class SingSongCommand extends RobotCommand {
 						return;
 					}
 
-					/** 音乐文件下载逻辑 **/
-					// 若音乐文件不存在时，尝试下载音乐
-					String path = mpa.getDownloadPath(si.getMusic_Name(),
-							si.getMusic_ID());
-
-					try {
-						mpa.downloadMusic(si);
-					} catch (CanNotDownloadFileException e) {
-						MessageManager.sendMessageBySituation(fromGroup, fromQQ, FileManager.applicationConfig_File.getSpecificDataInstance().Functions.SingSongFunction.music_need_paid_msg);
-						return;
-					} catch (FileTooBigException e) {
-						MessageManager.sendMessageBySituation(fromGroup, fromQQ, FileManager.applicationConfig_File.getSpecificDataInstance().Functions.SingSongFunction.download_music_file_too_big_msg);
-						return;
-					}
 
 					/** 音乐发送逻辑 **/
-					sendMusic(
-							fromGroup,
-							mpa.getDownloadFileName(si.getMusic_Name(), si.getMusic_ID()));
+					if (!send_card_flag) {
+
+						/** 音乐文件下载逻辑 **/
+						// 若音乐文件不存在时，尝试下载音乐
+						mpa.getDownloadPath(si.getMusic_Name(),
+								si.getMusic_ID());
+
+						try {
+							mpa.downloadMusic(si);
+						} catch (CanNotDownloadFileException e) {
+							MessageManager.sendMessageBySituation(fromGroup, fromQQ, FileManager.applicationConfig_File.getSpecificDataInstance().Functions.SingSongFunction.music_need_paid_msg);
+							return;
+						} catch (FileTooBigException e) {
+							MessageManager.sendMessageBySituation(fromGroup, fromQQ, FileManager.applicationConfig_File.getSpecificDataInstance().Functions.SingSongFunction.download_music_file_too_big_msg);
+							return;
+						}
+						sendMusic(
+								fromGroup,
+								mpa.getDownloadFileName(si.getMusic_Name(), si.getMusic_ID()));
+					} else {
+
+						// 将 命令调用者 的信息 附加到SongInformation上.
+						Member orderMember = BotManager.getGroupMemberCard(fromGroup, fromQQ);
+						si.setSummary("[点歌者] " + BotManager.getGroupMemberName(orderMember));
+						si.setImg_URL(orderMember.getAvatarUrl());
+
+						MessageManager.sendMessageBySituation(fromGroup, fromQQ,
+								mpa.getCardCode(si));
+
+					}
+
 				}
 			}).start();
 

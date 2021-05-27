@@ -17,6 +17,8 @@ public class SongInformation {
     private String hash = null;
     // 描述这首歌来源于哪里：网易，酷狗，QQ音乐等
     private String sourceType = null;
+    // 对该音乐的总结.
+    private String summary = null;
 
     /**
      * 纯净的SongInformation, 需要后续手动set变量
@@ -75,6 +77,14 @@ public class SongInformation {
         }
 
         return sb.toString().trim();
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public String getAuthor() {
@@ -167,13 +177,19 @@ public class SongInformation {
 
     @Override
     public String toString() {
-        return "SongInformation [music_Name=" + music_Name + ", music_ID="
-                + music_ID + ", music_Length=" + music_Length
-                + ", music_introduction=" + music_introduction
-                + ", music_Page_URL=" + music_Page_URL + ", author=" + author
-                + ", music_File_URL=" + music_File_URL + ", music_MID="
-                + music_MID + ", img_URL=" + img_URL + ", hash=" + hash
-                + ", sourceType=" + sourceType + "]";
+        return "SongInformation{" +
+                "music_Name='" + music_Name + '\'' +
+                ", music_ID=" + music_ID +
+                ", music_Length=" + music_Length +
+                ", music_introduction='" + music_introduction + '\'' +
+                ", music_Page_URL='" + music_Page_URL + '\'' +
+                ", author='" + author + '\'' +
+                ", music_File_URL='" + music_File_URL + '\'' +
+                ", music_MID='" + music_MID + '\'' +
+                ", img_URL='" + img_URL + '\'' +
+                ", hash='" + hash + '\'' +
+                ", sourceType='" + sourceType + '\'' +
+                ", summary='" + summary + '\'' +
+                '}';
     }
-
 }

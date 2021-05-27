@@ -48,6 +48,8 @@ public abstract class MusicPlatAPI {
         return ConfigFile.getApplicationConfigPath() + "voice-files/";
     }
 
+    public abstract String getCardCode(SongInformation si);
+
     /**
      * 传入音乐平台, 自动根据配置获取SongInformation
      **/
