@@ -170,6 +170,9 @@ public class SingSongCommand extends RobotCommand {
 						mpa = TencentMusicAPI.getInstance();
 						si = mpa.checkAndGetSongInformation(input_music_name,
 								random_music_flag);
+
+						// 注意: 使用QQ音乐平台时, 强制以卡片形式发送.
+						send_card_flag = true;
 					}
 
 					/** 搜索不到指定的音乐, 结束代码 **/
@@ -204,6 +207,7 @@ public class SingSongCommand extends RobotCommand {
 							MessageManager.sendMessageBySituation(fromGroup, fromQQ, FileManager.applicationConfig_File.getSpecificDataInstance().Functions.SingSongFunction.download_music_file_too_big_msg);
 							return;
 						}
+
 						sendMusic(
 								fromGroup,
 								mpa.getDownloadFileName(si.getMusic_Name(), si.getMusic_ID()));

@@ -93,7 +93,7 @@ public class ApplicationConfig_Data {
 		public class SingSongFunction {
 			public boolean enable = true;
 			public int perUseIntervalSecond = 10;
-			public int maxVoiceFileSize = 9000000;
+			public int maxVoiceFileSize = 15000000;
 			public String music_need_paid_msg = "很抱歉，这可能是一首付费歌曲。";
 			public String download_music_file_too_big_msg = "这首歌太长啦！";
 			public String not_found_music_msg = "哎呀，咱还不会《[OBJECT1]》这首歌！";
