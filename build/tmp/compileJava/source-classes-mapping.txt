@@ -29,8 +29,9 @@ com/sakurawald/utils/LanguageUtil.java
  com.sakurawald.utils.LanguageUtil
  com.sakurawald.utils.LanguageUtil$1
  com.sakurawald.utils.LanguageUtil$2
-com/sakurawald/exception/CanNotDownloadFileException.java
- com.sakurawald.exception.CanNotDownloadFileException
+com/sakurawald/command/commands/SingSongCommand.java
+ com.sakurawald.command.commands.SingSongCommand
+ com.sakurawald.command.commands.SingSongCommand$1
 com/sakurawald/framework/MessageManager.java
  com.sakurawald.framework.MessageManager
 com/sakurawald/exception/FileTooBigException.java
@@ -99,8 +100,8 @@ com/sakurawald/utils/DateUtil.java
  com.sakurawald.utils.DateUtil
 com/sakurawald/timer/timers/DailyTimer.java
  com.sakurawald.timer.timers.DailyTimer
-com/sakurawald/function/NudgeFunction.java
- com.sakurawald.function.NudgeFunction
+com/sakurawald/api/TencentMusicAPI.java
+ com.sakurawald.api.TencentMusicAPI
 com/sakurawald/function/FunctionManager.java
  com.sakurawald.function.FunctionManager
 com/sakurawald/bean/HistoryManager.java
@@ -119,8 +120,7 @@ com/sakurawald/framework/BotManager.java
  com.sakurawald.framework.BotManager
 com/sakurawald/command/RobotCommandChatType.java
  com.sakurawald.command.RobotCommandChatType
-com/sakurawald/command/commands/SingSongCommand.java
- com.sakurawald.command.commands.SingSongCommand
- com.sakurawald.command.commands.SingSongCommand$1
-com/sakurawald/api/TencentMusicAPI.java
- com.sakurawald.api.TencentMusicAPI
+com/sakurawald/function/NudgeFunction.java
+ com.sakurawald.function.NudgeFunction
+com/sakurawald/exception/CanNotDownloadFileException.java
+ com.sakurawald.exception.CanNotDownloadFileException

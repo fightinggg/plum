@@ -170,9 +170,6 @@ public class SingSongCommand extends RobotCommand {
 						mpa = TencentMusicAPI.getInstance();
 						si = mpa.checkAndGetSongInformation(input_music_name,
 								random_music_flag);
-
-						// 注意: QQ音乐平台的歌曲必定以 卡片形式 发送.
-						send_card_flag = true;
 					}
 
 					/** 搜索不到指定的音乐, 结束代码 **/

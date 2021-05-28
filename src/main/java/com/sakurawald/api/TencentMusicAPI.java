@@ -15,6 +15,7 @@ import okhttp3.Response;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Objects;
 
 public class TencentMusicAPI extends MusicPlatAPI {
 
@@ -96,6 +97,63 @@ public class TencentMusicAPI extends MusicPlatAPI {
         return result;
     }
 
+    private String getDownloadURL_JSON(String song_mid) {
+        LoggerManager.logDebug("QQ Music - API", "getDownloadURL_JSON -> Run");
+
+        String result = null;
+
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = null;
+        String URL = "http://localhost:3300/song/url?type=320&id=" + song_mid;
+        LoggerManager.logDebug("QQ Music - API", "Request URL >> " + URL);
+        request = new Request.Builder().url(URL).get().build();
+        Response response = null;
+        String JSON = null;
+        try {
+            response = client.newCall(request).execute();
+            LoggerManager.logDebug("QQ Music - API", "Request Response >> " + response);
+
+            JSON = response.body().string();
+            result = JSON;
+
+        } catch (IOException e) {
+            LoggerManager.logError(e);
+        }
+
+        LoggerManager.logDebug("QQ Music - API",
+                "Get Random Sentence >> Response: JSON = " + JSON);
+
+        /** 关闭Response的body **/
+        if (response != null) {
+            Objects.requireNonNull(response.body()).close();
+        }
+
+        return result;
+    }
+
+    private String getDownloadURL(String song_mid) {
+
+        /** 获取JSON数据 **/
+        String JSON = getDownloadURL_JSON(song_mid);
+
+        // 若未找到结果，则返回null
+        if (JSON == null) {
+            return null;
+        }
+
+        /** 解析JSON数据 **/
+        JsonObject jo = (JsonObject) JsonParser.parseString(JSON);
+
+
+        JsonObject response = jo.getAsJsonObject();
+        String data = response.get("data").getAsString();
+
+        LoggerManager.logDebug("QQ Music - API", "Get MusicFileURL >> " + data);
+        return data;
+    }
+
+
     @Override
     protected SongInformation getSongInformationByJSON(
             String getMusicListByMusicName_JSON, int index) {
@@ -139,7 +197,7 @@ public class TencentMusicAPI extends MusicPlatAPI {
             result.setMusic_MID(mid);
             result.setSourceType("QQ音乐");
             result.setMusic_Page_URL("http://y.qq.com/#type=song&id=" + music_ID);
-            result.setMusic_File_URL("http://y.qq.com/#type=song&id=" + music_ID);
+            result.setMusic_File_URL(getDownloadURL(mid));
 
             if (i >= index) {
 
