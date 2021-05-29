@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
 
@@ -69,7 +71,7 @@ public class NeteaseCloudMusicAPI extends MusicPlatAPI {
     @Override
     protected String getMusicListByMusicName_JSON(String music_name) {
 
-        LoggerManager.logDebug(getLogType_name(), "搜索音乐列表 - 请求: music_name = "
+        LoggerManager.logDebug(getLogTypeName(), "搜索音乐列表 - 请求: music_name = "
                 + music_name);
 
         String result = null;
@@ -102,7 +104,7 @@ public class NeteaseCloudMusicAPI extends MusicPlatAPI {
             LoggerManager.reportException(e);
         } finally {
 
-            LoggerManager.logDebug(getLogType_name(), "搜索音乐列表 - 结果: Code = "
+            LoggerManager.logDebug(getLogTypeName(), "搜索音乐列表 - 结果: Code = "
                     + response.message() + ", Response = " + JSON);
         }
 
@@ -155,13 +157,13 @@ public class NeteaseCloudMusicAPI extends MusicPlatAPI {
             result.setMusic_Page_URL("http://music.163.com/song/" + id);
 
             if (i >= index) {
-                LoggerManager.logDebug(getLogType_name(),
+                LoggerManager.logDebug(getLogTypeName(),
                         "获取的音乐信息(指定首) - 成功获取到指定首(第" + index + "首)的音乐的信息: "
                                 + result);
 
                 // [!] 判断获取到的歌曲能不能下载, 若该首音乐不能下载, 则向下选择下一首
                 if (!canAccess(this.getDownloadMusicURL(id))) {
-                    LoggerManager.logDebug(getLogType_name(),
+                    LoggerManager.logDebug(getLogTypeName(),
                             "获取的音乐信息(指定首) - 检测到指定首(第" + index
                                     + "首)的音乐无法下载, 即将自动匹配下一首");
                     index++;
@@ -180,7 +182,7 @@ public class NeteaseCloudMusicAPI extends MusicPlatAPI {
         if (result == null) {
             return null;
         } else {
-            LoggerManager.logDebug(getLogType_name(), "获取音乐信息(指定首) - 未获取到指定首(第"
+            LoggerManager.logDebug(getLogTypeName(), "获取音乐信息(指定首) - 未获取到指定首(第"
                     + index + "首)的音乐，默认返回最后一次成功获取的音乐信息: " + result);
             return result;
         }
@@ -207,6 +209,11 @@ public class NeteaseCloudMusicAPI extends MusicPlatAPI {
                 si.getSummary(), si.getMusic_Page_URL(), si.getImg_URL(),
                 si.getMusic_File_URL(),
                 "[点歌] " + si.getMusic_Name())).serializeToMiraiCode();
+    }
+
+    @Override
+    public ArrayList<String> getSelectCodes() {
+        return new ArrayList<>(Arrays.asList("网易云音乐", "网易云", "网易"));
     }
 
 }

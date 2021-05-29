@@ -11,6 +11,7 @@ import com.sakurawald.utils.NetworkUtil;
 import com.sakurawald.utils.NumberUtil;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * 用于描述一个音乐平台的对象
@@ -64,7 +65,7 @@ public abstract class MusicPlatAPI {
             result = this.getFirstSongInformationByMusicName(input_music_name);
         }
 
-        LoggerManager.logDebug(getLogType_name(), "获取到的SongInformation: " + result,
+        LoggerManager.logDebug(getLogTypeName(), "获取到的SongInformation: " + result,
                 true);
         return result;
     }
@@ -109,29 +110,34 @@ public abstract class MusicPlatAPI {
         String path = download_path;
 
         if (new File(path).exists()) {
-            LoggerManager.logDebug(getLogType_name(),
+            LoggerManager.logDebug(getLogTypeName(),
                     "检测到所要下载音乐文件已存在，跳过下载: file_path = " + path, true);
             return "MUSIC_FILE_HAS_EXIST";
         }
 
-        LoggerManager.logDebug(getLogType_name(), "开始下载音乐文件: URL = " + URL, true);
+        LoggerManager.logDebug(getLogTypeName(), "开始下载音乐文件: URL = " + URL, true);
 
         try {
             NetworkUtil.downloadVoiceFile(URL, path);
         } catch (CanNotDownloadFileException e) {
-            LoggerManager.logDebug(getLogType_name(),
+            LoggerManager.logDebug(getLogTypeName(),
                     "检测到所要下载的音乐文件为付费音乐，无法下载: URL = " + URL, true);
             throw e;
         } catch (FileTooBigException e) {
-            LoggerManager.logDebug(getLogType_name(), "检测到所要下载的音乐文件太大，拒绝下载: URL = "
+            LoggerManager.logDebug(getLogTypeName(), "检测到所要下载的音乐文件太大，拒绝下载: URL = "
                     + URL, true);
             throw e;
         }
 
-        LoggerManager.logDebug(getLogType_name(), "完成下载音乐文件: URL = " + URL, true);
+        LoggerManager.logDebug(getLogTypeName(), "完成下载音乐文件: URL = " + URL, true);
 
         return "OK";
     }
+
+    /**
+     * 指定当前音乐平台的代码.
+     **/
+    public abstract ArrayList<String> getSelectCodes();
 
     public String getDownloadFileName(String music_name, long music_ID) {
 
@@ -166,7 +172,7 @@ public abstract class MusicPlatAPI {
         return getSongInformationByMusicName(music_name, 1);
     }
 
-    protected String getLogType_name() {
+    public String getLogTypeName() {
         return logType_name;
     }
 
@@ -185,7 +191,7 @@ public abstract class MusicPlatAPI {
          * **/
         int index = NumberUtil.getRandomNumber(1, 20);
 
-        LoggerManager.logDebug(getLogType_name(), "获取随机首的音乐信息: index = " + index);
+        LoggerManager.logDebug(getLogTypeName(), "获取随机首的音乐信息: index = " + index);
 
         return getSongInformationByMusicName(music_name, index);
     }

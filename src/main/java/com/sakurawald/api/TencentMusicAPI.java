@@ -14,12 +14,14 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Objects;
 
 public class TencentMusicAPI extends MusicPlatAPI {
 
-    private static TencentMusicAPI instance = new TencentMusicAPI(
+    private static final TencentMusicAPI instance = new TencentMusicAPI(
             "QQ Music - API", "tencent_music");
 
     public TencentMusicAPI(String logType_name,
@@ -44,11 +46,7 @@ public class TencentMusicAPI extends MusicPlatAPI {
         int payplay = pay.get("payplay").getAsInt();
 
         /** 输出反馈结果 **/
-        if (payplay == 0) {
-            return true;
-        }
-
-        return false;
+        return payplay == 0;
     }
 
     @Override
@@ -57,6 +55,11 @@ public class TencentMusicAPI extends MusicPlatAPI {
                 si.getSummary(), si.getMusic_Page_URL(), si.getImg_URL(),
                 si.getMusic_File_URL(),
                 "[点歌] " + si.getMusic_Name())).serializeToMiraiCode();
+    }
+
+    @Override
+    public ArrayList<String> getSelectCodes() {
+        return new ArrayList<>(Arrays.asList("qq音乐", "qq", "腾讯音乐", "腾讯"));
     }
 
     @Override

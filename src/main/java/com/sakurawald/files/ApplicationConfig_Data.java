@@ -92,7 +92,7 @@ public class ApplicationConfig_Data {
 		public SingSongFunction SingSongFunction = new SingSongFunction();
 		public class SingSongFunction {
 			public boolean enable = true;
-			public int perUseIntervalSecond = 10;
+			public int perUseIntervalSecond = 5;
 			public int maxVoiceFileSize = 15000000;
 			public String music_need_paid_msg = "很抱歉，这可能是一首付费歌曲。";
 			public String download_music_file_too_big_msg = "这首歌太长啦！";

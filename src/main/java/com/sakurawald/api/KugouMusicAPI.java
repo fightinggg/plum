@@ -16,6 +16,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
 
@@ -38,6 +40,11 @@ public class KugouMusicAPI extends MusicPlatAPI {
                 si.getSummary(), si.getMusic_Page_URL(), si.getImg_URL(),
                 si.getMusic_File_URL(),
                 "[点歌] " + si.getMusic_Name())).serializeToMiraiCode();
+    }
+
+    @Override
+    public ArrayList<String> getSelectCodes() {
+        return new ArrayList<>(Arrays.asList("酷狗音乐", "酷狗"));
     }
 
     private boolean canAccess(String keyContent) {
@@ -86,14 +93,14 @@ public class KugouMusicAPI extends MusicPlatAPI {
      **/
     protected String getDownloadMusicURL_JSON(String hash) {
 
-        LoggerManager.logDebug(getLogType_name(), "解析音乐下载地址 - 请求: hash = " + hash);
+        LoggerManager.logDebug(getLogTypeName(), "解析音乐下载地址 - 请求: hash = " + hash);
 
         String result = null;
 
         Builder builder = new OkHttpClient.Builder();
         OkHttpClient client = builder.build();
 
-        Request request = null;
+        Request request;
 
         // 计算出key
         String key = MD5Util.getMD5((hash + "kgcloudv2").toLowerCase());
@@ -120,7 +127,7 @@ public class KugouMusicAPI extends MusicPlatAPI {
         } catch (IOException e) {
             LoggerManager.reportException(e);
         } finally {
-            LoggerManager.logDebug(getLogType_name(), "解析音乐下载地址 - 结果: Code = "
+            LoggerManager.logDebug(getLogTypeName(), "解析音乐下载地址 - 结果: Code = "
                     + response.message() + ", Response = " + JSON);
         }
 
@@ -136,7 +143,7 @@ public class KugouMusicAPI extends MusicPlatAPI {
     @Override
     protected String getMusicListByMusicName_JSON(String music_name) {
 
-        LoggerManager.logDebug(getLogType_name(), "搜索音乐列表 - 请求: music_name = "
+        LoggerManager.logDebug(getLogTypeName(), "搜索音乐列表 - 请求: music_name = "
                 + music_name);
 
         String result = null;
@@ -166,7 +173,7 @@ public class KugouMusicAPI extends MusicPlatAPI {
             LoggerManager.reportException(e);
         } finally {
 
-            LoggerManager.logDebug(getLogType_name(), "搜索音乐列表 - 结果: Code = "
+            LoggerManager.logDebug(getLogTypeName(), "搜索音乐列表 - 结果: Code = "
                     + response.message() + ", Response = " + JSON);
         }
 
@@ -241,13 +248,13 @@ public class KugouMusicAPI extends MusicPlatAPI {
             }
 
             if (i >= index) {
-                LoggerManager.logDebug(getLogType_name(),
+                LoggerManager.logDebug(getLogTypeName(),
                         "获取的音乐信息(指定首) - 成功获取到指定首(第" + index + "首)的音乐的信息: "
                                 + result);
 
                 // [!] 判断获取到的歌曲能不能下载, 若该首音乐不能下载, 则向下选择下一首
                 if (!canAccess(result.getMusic_File_URL())) {
-                    LoggerManager.logDebug(getLogType_name(),
+                    LoggerManager.logDebug(getLogTypeName(),
                             "获取的音乐信息(指定首) - 检测到指定首(第" + index
                                     + "首)的音乐无法下载, 即将自动匹配下一首");
                     index++;
@@ -267,7 +274,7 @@ public class KugouMusicAPI extends MusicPlatAPI {
             return null;
         } else {
 
-            LoggerManager.logDebug(getLogType_name(), "获取音乐信息(指定首) - 未获取到指定首(第"
+            LoggerManager.logDebug(getLogTypeName(), "获取音乐信息(指定首) - 未获取到指定首(第"
                     + index + "首)的音乐，默认返回最后一次成功获取的音乐信息: " + result);
             return result;
         }

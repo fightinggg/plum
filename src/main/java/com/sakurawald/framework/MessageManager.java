@@ -1,13 +1,17 @@
 package com.sakurawald.framework;
 
+import java.io.File;
 import java.io.IOException;
 
 import com.sakurawald.PluginMain;
+import com.sakurawald.api.MusicPlatAPI;
 import com.sakurawald.debug.LoggerManager;
 import com.sakurawald.files.FileManager;
+import io.github.mzdluo123.silk4j.AudioUtils;
 import net.mamoe.mirai.contact.*;
 import net.mamoe.mirai.message.code.MiraiCode;
 import net.mamoe.mirai.message.data.*;
+import net.mamoe.mirai.utils.ExternalResource;
 
 //用于管理Message的类
 public class MessageManager {
@@ -215,6 +219,30 @@ public class MessageManager {
 		/** 对发送的文本进行字数检测 **/
 		msg = checkLengthAndModifySendMsg(msg);
 		sendMessageToQQGroup(group, MiraiCode.deserializeMiraiCode(msg));
+	}
+
+	public static void sendVoiceToQQGroup(long QQGroup, String voice_file_name) {
+
+		LoggerManager.logDebug("SendSystem", "sendMusic() -> voice_file_name = "
+				+ voice_file_name, true);
+
+
+		// MP3 -> Silk
+		File uploadVoiceFile = new File(MusicPlatAPI.getVoicesPath() + voice_file_name);
+		File silkVoiceFile = null;
+		try {
+			LoggerManager.logDebug("SendSystem", "Start MP3 to Silk: " + voice_file_name);
+			silkVoiceFile = AudioUtils.mp3ToSilk(uploadVoiceFile);
+			LoggerManager.logDebug("SendSystem", "Finish MP3 to Silk: " + voice_file_name);
+		} catch (IOException e) {
+			LoggerManager.reportException(e);
+		}
+
+		// Send SilkVoiceFile.
+		LoggerManager.logDebug("SendSystem", "Ready to send VoiceFile: voice_file_name = "
+				+ voice_file_name, true);
+		Voice uploadVoice = PluginMain.getCurrentBot().getGroup(QQGroup).uploadVoice(ExternalResource.create(silkVoiceFile));
+		PluginMain.getCurrentBot().getGroup(QQGroup).sendMessage(uploadVoice);
 	}
 
 
