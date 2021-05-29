@@ -58,7 +58,7 @@ public class SingSongCommand extends RobotCommand {
 				.matches("^(?:(?:唱歌)|(?:唱)|(?:点歌)|(?:听歌)|(?:我想听)|(?:来首)|(?:想听)|(?:给我唱))[\\s]*$")) {
 			String help =  "用法示例：\n"
 					+ "\"唱歌 霜雪千年\"" + "\n"
-					+ "\"唱歌 霜雪千年 " + RANDOM_SING_FLAG +"\""
+					+ "\"唱歌 霜雪千年 " + RANDOM_SING_FLAG +"\"" + "\n"
 					+ "\"唱歌 霜雪千年 网易云/酷狗/QQ\""
 					+ "\n\n●注意\n"
 					+ "○若搜索到的歌曲不是你想要的版本，则需要手动指定歌手~" + "\n"

@@ -31,7 +31,6 @@ com/sakurawald/utils/LanguageUtil.java
  com.sakurawald.utils.LanguageUtil$2
 com/sakurawald/command/commands/SingSongCommand.java
  com.sakurawald.command.commands.SingSongCommand
- com.sakurawald.command.commands.SingSongCommand$1
 com/sakurawald/framework/MessageManager.java
  com.sakurawald.framework.MessageManager
 com/sakurawald/exception/FileTooBigException.java
