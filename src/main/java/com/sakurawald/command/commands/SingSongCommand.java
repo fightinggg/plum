@@ -59,10 +59,7 @@ public class SingSongCommand extends RobotCommand {
 			String help =  "用法示例：\n"
 					+ "\"唱歌 霜雪千年\"" + "\n"
 					+ "\"唱歌 霜雪千年 " + RANDOM_SING_FLAG +"\"" + "\n"
-					+ "\"唱歌 霜雪千年 网易云/酷狗/QQ\""
-					+ "\n\n●注意\n"
-					+ "○若搜索到的歌曲不是你想要的版本，则需要手动指定歌手~" + "\n"
-					+ "○付费原唱歌曲无法被指定，将自动选择合适的翻唱版本！";
+					+ "\"唱歌 霜雪千年 网易云/酷狗/QQ\"";
 
 			MessageManager.sendMessageBySituation(fromGroup, fromQQ, help);
 			return;
