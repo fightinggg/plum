@@ -31,7 +31,7 @@ public class DailyPoetryExplanationCommand extends RobotCommand {
 
 		if (!FileManager.applicationConfig_File.getSpecificDataInstance().Functions.DailyPoetry.explanation_Enable) {
 			MessageManager.sendMessageBySituation(fromGroup, fromQQ,
-					"很抱歉，诗词解读功能已暂停使用~");
+					FileManager.applicationConfig_File.getSpecificDataInstance().Functions.FunctionManager.functionDisableMsg);
 			return;
 		}
 

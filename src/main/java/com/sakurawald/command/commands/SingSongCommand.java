@@ -76,10 +76,6 @@ public class SingSongCommand extends RobotCommand {
 			String finalMsg = msg;
 			new Thread(() -> {
 
-				/** 变量定义 **/
-				MusicPlatAPI mpa = null;
-				boolean random_music_flag;
-
 				LoggerManager.logDebug("SingSong", "收到唱歌指令，开始执行核心代码", true);
 
 				/** 判断唱歌间隔是否合法 **/
@@ -106,7 +102,11 @@ public class SingSongCommand extends RobotCommand {
 
 				// 点歌 -> 以卡片形式分享.
 				boolean send_card_flag = finalMsg.contains("点歌");
+				if (FileManager.applicationConfig_File.getSpecificDataInstance().Functions.SingSongFunction.forceSendCard) {
+					send_card_flag = true;
+				}
 
+				boolean random_music_flag;
 				random_music_flag = SingManager.getInstance().isRandomSing(
 						finalMsg);
 
@@ -136,7 +136,7 @@ public class SingSongCommand extends RobotCommand {
 				LoggerManager.logDebug("SingSong",
 						"input_music_name = "
 								+ input_music_name, true);
-
+				MusicPlatAPI mpa = null;
 				for (int i = 0; i < musicPlatAPIS.size(); i++) {
 					LoggerManager.logDebug("SingSong",
 							"尝试第" + (i+1) + "乐库: " + musicPlatAPIS.get(i).getLogTypeName(), true);

@@ -46,6 +46,7 @@ public class ApplicationConfig_Data {
 		public FunctionManager FunctionManager = new FunctionManager();
 		public class FunctionManager {
 			public String callTooOftenMsg = "调用该功能过于频繁，请稍后再试试吧~";
+			public String functionDisableMsg = "很抱歉，该功能已被禁用。";
 		}
 
 		public DailyCountdown DailyCountdown = new DailyCountdown();
@@ -92,6 +93,7 @@ public class ApplicationConfig_Data {
 		public SingSongFunction SingSongFunction = new SingSongFunction();
 		public class SingSongFunction {
 			public boolean enable = true;
+			public boolean forceSendCard = false;
 			public int perUseIntervalSecond = 5;
 			public int maxVoiceFileSize = 15000000;
 			public String music_need_paid_msg = "很抱歉，这可能是一首付费歌曲。";
