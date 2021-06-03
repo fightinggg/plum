@@ -5,7 +5,7 @@ import com.sakurawald.bean.SongInformation;
 import com.sakurawald.debug.LoggerManager;
 import com.sakurawald.exception.CanNotDownloadFileException;
 import com.sakurawald.exception.FileTooBigException;
-import com.sakurawald.files.ConfigFile;
+import com.sakurawald.framework.BotManager;
 import com.sakurawald.utils.LanguageUtil;
 import com.sakurawald.utils.NetworkUtil;
 import com.sakurawald.utils.NumberUtil;
@@ -46,7 +46,7 @@ public abstract class MusicPlatAPI {
     }
 
     public static String getVoicesPath() {
-        return ConfigFile.getApplicationConfigPath() + "voice-files/";
+        return BotManager.getVoicesPath();
     }
 
     public abstract String getCardCode(SongInformation si);

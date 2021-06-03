@@ -1,5 +1,6 @@
 package com.sakurawald.utils;
 
+import java.io.File;
 import java.lang.Character.UnicodeBlock;
 import java.util.HashSet;
 import java.util.Set;
@@ -13,7 +14,7 @@ public class LanguageUtil {
 	 * 对输入字符串的每一个字符进行Unicode Block区间检测, 若发现非 汉语, 英文, 符号之外的Unicode,
 	 * 则直接以Unicode码的转移形式表示
 	 **/
-	private static Set<UnicodeBlock> translateValidUnicodeBlocks = new HashSet<UnicodeBlock>() {
+	private static final Set<UnicodeBlock> translateValidUnicodeBlocks = new HashSet<UnicodeBlock>() {
 		{
 			add(UnicodeBlock.KATAKANA);
 			add(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS);
@@ -25,7 +26,7 @@ public class LanguageUtil {
 		}
 	};
 
-	private static Set<UnicodeBlock> mJapaneseUnicodeBlocks = new HashSet<UnicodeBlock>() {
+	private static final Set<UnicodeBlock> mJapaneseUnicodeBlocks = new HashSet<UnicodeBlock>() {
 		{
 			add(UnicodeBlock.HIRAGANA);
 			add(UnicodeBlock.KATAKANA);
@@ -34,9 +35,8 @@ public class LanguageUtil {
 
 
 	public static String detransSpecialCode(String message) {
-		String newMessage = message.replace(" ", "#SPACE")
+		return message.replace(" ", "#SPACE")
 				.replace("\n", "#ENTER").replace("§", "&");
-		return newMessage;
 	}
 
 
@@ -79,7 +79,7 @@ public class LanguageUtil {
 
 	/** 将文件名中对Windows不合法的成分都进行转化 **/
 	public static String translateFileName(String fileName) {
-		return fileName.replace("/", "or").replace("\\", "or")
+		return fileName.replace("/", "or").replace("\\", "or").replace(File.separator, "").replace(File.pathSeparator, "")
 				.replace("&", "and").replace(":", "Colon").replace("*", "Star")
 				.replace("?", "QM").replace("|", "DIV").replace("<", "LSM")
 				.replace(">", "RSM");
@@ -93,7 +93,7 @@ public class LanguageUtil {
 		for (char c : str.toCharArray()) {
 
 			if (!translateValidUnicodeBlocks.contains(UnicodeBlock.of(c))) {
-				sb.append("U=" + (int) c + ";");
+				sb.append("U=").append((int) c).append(";");
 			} else {
 				sb.append(c);
 			}
@@ -105,7 +105,7 @@ public class LanguageUtil {
 
 	public static String translateValidUnicodeSimple(String str) {
 
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		/** 对字符串中每个字符进行检测 **/
 		for (char c : str.toCharArray()) {

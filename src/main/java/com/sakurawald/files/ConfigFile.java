@@ -17,7 +17,7 @@ public class ConfigFile {
         String result = null;
 
         result = FileUtil.getJavaRunPath();
-        result = result + "\\plugins\\Plum\\";
+        result = result + "plugins" + File.separator + "Plum" + File.separator;
 
         return result;
     }
